@@ -1,0 +1,26 @@
+.git
+.gitignore
+.env
+llm_api/.env
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+.venv/
+venv/
+env/
+build/
+dist/
+
+# Databases and vector stores
+logs/*.db
+chroma_db/
+
+# IDE and OS
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+
