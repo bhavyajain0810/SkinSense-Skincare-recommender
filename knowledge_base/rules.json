@@ -1,0 +1,437 @@
+[
+  {
+    "id": "R001",
+    "tags": "skin_type:oily concern:acne routine:am",
+    "text": "For oily skin with acne concerns, build a gentle morning routine. Use mild, cosmetic skincare products and stop using anything that feels irritating. Focus on lightweight, non-comedogenic textures and avoid heavy occlusive layers."
+  },
+  {
+    "id": "R002",
+    "tags": "skin_type:oily concern:acne routine:pm",
+    "text": "For oily skin with acne concerns, build a gentle evening routine. Use mild, cosmetic skincare products and stop using anything that feels irritating. Focus on lightweight, non-comedogenic textures and avoid heavy occlusive layers."
+  },
+  {
+    "id": "R003",
+    "tags": "skin_type:oily concern:pigmentation routine:am",
+    "text": "For oily skin with pigmentation concerns, build a gentle morning routine. Use mild, cosmetic skincare products and stop using anything that feels irritating. Look for brightening cosmetic ingredients and be consistent rather than using strong products."
+  },
+  {
+    "id": "R004",
+    "tags": "skin_type:oily concern:pigmentation routine:pm",
+    "text": "For oily skin with pigmentation concerns, build a gentle evening routine. Use mild, cosmetic skincare products and stop using anything that feels irritating. Look for brightening cosmetic ingredients and be consistent rather than using strong products."
+  },
+  {
+    "id": "R005",
+    "tags": "skin_type:oily concern:dullness routine:am",
+    "text": "For oily skin with dullness concerns, build a gentle morning routine. Use mild, cosmetic skincare products and stop using anything that feels irritating. Add gentle hydrating layers and avoid over-scrubbing the skin surface."
+  },
+  {
+    "id": "R006",
+    "tags": "skin_type:oily concern:dullness routine:pm",
+    "text": "For oily skin with dullness concerns, build a gentle evening routine. Use mild, cosmetic skincare products and stop using anything that feels irritating. Add gentle hydrating layers and avoid over-scrubbing the skin surface."
+  },
+  {
+    "id": "R007",
+    "tags": "skin_type:oily concern:dryness routine:am",
+    "text": "For oily skin with dryness concerns, build a gentle morning routine. Use mild, cosmetic skincare products and stop using anything that feels irritating. Use soft, cushioning textures and seal in hydration with a comfortable moisturizer."
+  },
+  {
+    "id": "R008",
+    "tags": "skin_type:oily concern:dryness routine:pm",
+    "text": "For oily skin with dryness concerns, build a gentle evening routine. Use mild, cosmetic skincare products and stop using anything that feels irritating. Use soft, cushioning textures and seal in hydration with a comfortable moisturizer."
+  },
+  {
+    "id": "R009",
+    "tags": "skin_type:oily concern:redness routine:am",
+    "text": "For oily skin with redness concerns, build a gentle morning routine. Use mild, cosmetic skincare products and stop using anything that feels irritating. Choose simple, fragrance‑free formulas and keep water temperature lukewarm."
+  },
+  {
+    "id": "R010",
+    "tags": "skin_type:oily concern:redness routine:pm",
+    "text": "For oily skin with redness concerns, build a gentle evening routine. Use mild, cosmetic skincare products and stop using anything that feels irritating. Choose simple, fragrance‑free formulas and keep water temperature lukewarm."
+  },
+  {
+    "id": "R011",
+    "tags": "skin_type:oily concern:texture routine:am",
+    "text": "For oily skin with texture concerns, build a gentle morning routine. Use mild, cosmetic skincare products and stop using anything that feels irritating. Keep the barrier comfortable first; use any texture‑smoothing cosmetics sparingly."
+  },
+  {
+    "id": "R012",
+    "tags": "skin_type:oily concern:texture routine:pm",
+    "text": "For oily skin with texture concerns, build a gentle evening routine. Use mild, cosmetic skincare products and stop using anything that feels irritating. Keep the barrier comfortable first; use any texture‑smoothing cosmetics sparingly."
+  },
+  {
+    "id": "R013",
+    "tags": "skin_type:oily concern:fine_lines routine:am",
+    "text": "For oily skin with fine_lines concerns, build a gentle morning routine. Use mild, cosmetic skincare products and stop using anything that feels irritating. Layer hydrating serums and moisturizers to reduce the look of fine lines caused by dryness."
+  },
+  {
+    "id": "R014",
+    "tags": "skin_type:oily concern:fine_lines routine:pm",
+    "text": "For oily skin with fine_lines concerns, build a gentle evening routine. Use mild, cosmetic skincare products and stop using anything that feels irritating. Layer hydrating serums and moisturizers to reduce the look of fine lines caused by dryness."
+  },
+  {
+    "id": "R015",
+    "tags": "skin_type:oily concern:sun_protection routine:am",
+    "text": "For oily skin with sun_protection concerns, build a gentle morning routine. Use mild, cosmetic skincare products and stop using anything that feels irritating. Use a comfortable, broad cosmetic sunscreen and reapply according to the label."
+  },
+  {
+    "id": "R016",
+    "tags": "skin_type:oily concern:sun_protection routine:pm",
+    "text": "For oily skin with sun_protection concerns, build a gentle evening routine. Use mild, cosmetic skincare products and stop using anything that feels irritating. Use a comfortable, broad cosmetic sunscreen and reapply according to the label."
+  },
+  {
+    "id": "R017",
+    "tags": "skin_type:dry concern:acne routine:am",
+    "text": "For dry skin with acne concerns, build a gentle morning routine. Use mild, cosmetic skincare products and stop using anything that feels irritating. Focus on lightweight, non-comedogenic textures and avoid heavy occlusive layers."
+  },
+  {
+    "id": "R018",
+    "tags": "skin_type:dry concern:acne routine:pm",
+    "text": "For dry skin with acne concerns, build a gentle evening routine. Use mild, cosmetic skincare products and stop using anything that feels irritating. Focus on lightweight, non-comedogenic textures and avoid heavy occlusive layers."
+  },
+  {
+    "id": "R019",
+    "tags": "skin_type:dry concern:pigmentation routine:am",
+    "text": "For dry skin with pigmentation concerns, build a gentle morning routine. Use mild, cosmetic skincare products and stop using anything that feels irritating. Look for brightening cosmetic ingredients and be consistent rather than using strong products."
+  },
+  {
+    "id": "R020",
+    "tags": "skin_type:dry concern:pigmentation routine:pm",
+    "text": "For dry skin with pigmentation concerns, build a gentle evening routine. Use mild, cosmetic skincare products and stop using anything that feels irritating. Look for brightening cosmetic ingredients and be consistent rather than using strong products."
+  },
+  {
+    "id": "R021",
+    "tags": "skin_type:dry concern:dullness routine:am",
+    "text": "For dry skin with dullness concerns, build a gentle morning routine. Use mild, cosmetic skincare products and stop using anything that feels irritating. Add gentle hydrating layers and avoid over-scrubbing the skin surface."
+  },
+  {
+    "id": "R022",
+    "tags": "skin_type:dry concern:dullness routine:pm",
+    "text": "For dry skin with dullness concerns, build a gentle evening routine. Use mild, cosmetic skincare products and stop using anything that feels irritating. Add gentle hydrating layers and avoid over-scrubbing the skin surface."
+  },
+  {
+    "id": "R023",
+    "tags": "skin_type:dry concern:dryness routine:am",
+    "text": "For dry skin with dryness concerns, build a gentle morning routine. Use mild, cosmetic skincare products and stop using anything that feels irritating. Use soft, cushioning textures and seal in hydration with a comfortable moisturizer."
+  },
+  {
+    "id": "R024",
+    "tags": "skin_type:dry concern:dryness routine:pm",
+    "text": "For dry skin with dryness concerns, build a gentle evening routine. Use mild, cosmetic skincare products and stop using anything that feels irritating. Use soft, cushioning textures and seal in hydration with a comfortable moisturizer."
+  },
+  {
+    "id": "R025",
+    "tags": "skin_type:dry concern:redness routine:am",
+    "text": "For dry skin with redness concerns, build a gentle morning routine. Use mild, cosmetic skincare products and stop using anything that feels irritating. Choose simple, fragrance‑free formulas and keep water temperature lukewarm."
+  },
+  {
+    "id": "R026",
+    "tags": "skin_type:dry concern:redness routine:pm",
+    "text": "For dry skin with redness concerns, build a gentle evening routine. Use mild, cosmetic skincare products and stop using anything that feels irritating. Choose simple, fragrance‑free formulas and keep water temperature lukewarm."
+  },
+  {
+    "id": "R027",
+    "tags": "skin_type:dry concern:texture routine:am",
+    "text": "For dry skin with texture concerns, build a gentle morning routine. Use mild, cosmetic skincare products and stop using anything that feels irritating. Keep the barrier comfortable first; use any texture‑smoothing cosmetics sparingly."
+  },
+  {
+    "id": "R028",
+    "tags": "skin_type:dry concern:texture routine:pm",
+    "text": "For dry skin with texture concerns, build a gentle evening routine. Use mild, cosmetic skincare products and stop using anything that feels irritating. Keep the barrier comfortable first; use any texture‑smoothing cosmetics sparingly."
+  },
+  {
+    "id": "R029",
+    "tags": "skin_type:dry concern:fine_lines routine:am",
+    "text": "For dry skin with fine_lines concerns, build a gentle morning routine. Use mild, cosmetic skincare products and stop using anything that feels irritating. Layer hydrating serums and moisturizers to reduce the look of fine lines caused by dryness."
+  },
+  {
+    "id": "R030",
+    "tags": "skin_type:dry concern:fine_lines routine:pm",
+    "text": "For dry skin with fine_lines concerns, build a gentle evening routine. Use mild, cosmetic skincare products and stop using anything that feels irritating. Layer hydrating serums and moisturizers to reduce the look of fine lines caused by dryness."
+  },
+  {
+    "id": "R031",
+    "tags": "skin_type:dry concern:sun_protection routine:am",
+    "text": "For dry skin with sun_protection concerns, build a gentle morning routine. Use mild, cosmetic skincare products and stop using anything that feels irritating. Use a comfortable, broad cosmetic sunscreen and reapply according to the label."
+  },
+  {
+    "id": "R032",
+    "tags": "skin_type:dry concern:sun_protection routine:pm",
+    "text": "For dry skin with sun_protection concerns, build a gentle evening routine. Use mild, cosmetic skincare products and stop using anything that feels irritating. Use a comfortable, broad cosmetic sunscreen and reapply according to the label."
+  },
+  {
+    "id": "R033",
+    "tags": "skin_type:combination concern:acne routine:am",
+    "text": "For combination skin with acne concerns, build a gentle morning routine. Use mild, cosmetic skincare products and stop using anything that feels irritating. Focus on lightweight, non-comedogenic textures and avoid heavy occlusive layers."
+  },
+  {
+    "id": "R034",
+    "tags": "skin_type:combination concern:acne routine:pm",
+    "text": "For combination skin with acne concerns, build a gentle evening routine. Use mild, cosmetic skincare products and stop using anything that feels irritating. Focus on lightweight, non-comedogenic textures and avoid heavy occlusive layers."
+  },
+  {
+    "id": "R035",
+    "tags": "skin_type:combination concern:pigmentation routine:am",
+    "text": "For combination skin with pigmentation concerns, build a gentle morning routine. Use mild, cosmetic skincare products and stop using anything that feels irritating. Look for brightening cosmetic ingredients and be consistent rather than using strong products."
+  },
+  {
+    "id": "R036",
+    "tags": "skin_type:combination concern:pigmentation routine:pm",
+    "text": "For combination skin with pigmentation concerns, build a gentle evening routine. Use mild, cosmetic skincare products and stop using anything that feels irritating. Look for brightening cosmetic ingredients and be consistent rather than using strong products."
+  },
+  {
+    "id": "R037",
+    "tags": "skin_type:combination concern:dullness routine:am",
+    "text": "For combination skin with dullness concerns, build a gentle morning routine. Use mild, cosmetic skincare products and stop using anything that feels irritating. Add gentle hydrating layers and avoid over-scrubbing the skin surface."
+  },
+  {
+    "id": "R038",
+    "tags": "skin_type:combination concern:dullness routine:pm",
+    "text": "For combination skin with dullness concerns, build a gentle evening routine. Use mild, cosmetic skincare products and stop using anything that feels irritating. Add gentle hydrating layers and avoid over-scrubbing the skin surface."
+  },
+  {
+    "id": "R039",
+    "tags": "skin_type:combination concern:dryness routine:am",
+    "text": "For combination skin with dryness concerns, build a gentle morning routine. Use mild, cosmetic skincare products and stop using anything that feels irritating. Use soft, cushioning textures and seal in hydration with a comfortable moisturizer."
+  },
+  {
+    "id": "R040",
+    "tags": "skin_type:combination concern:dryness routine:pm",
+    "text": "For combination skin with dryness concerns, build a gentle evening routine. Use mild, cosmetic skincare products and stop using anything that feels irritating. Use soft, cushioning textures and seal in hydration with a comfortable moisturizer."
+  },
+  {
+    "id": "R041",
+    "tags": "skin_type:combination concern:redness routine:am",
+    "text": "For combination skin with redness concerns, build a gentle morning routine. Use mild, cosmetic skincare products and stop using anything that feels irritating. Choose simple, fragrance‑free formulas and keep water temperature lukewarm."
+  },
+  {
+    "id": "R042",
+    "tags": "skin_type:combination concern:redness routine:pm",
+    "text": "For combination skin with redness concerns, build a gentle evening routine. Use mild, cosmetic skincare products and stop using anything that feels irritating. Choose simple, fragrance‑free formulas and keep water temperature lukewarm."
+  },
+  {
+    "id": "R043",
+    "tags": "skin_type:combination concern:texture routine:am",
+    "text": "For combination skin with texture concerns, build a gentle morning routine. Use mild, cosmetic skincare products and stop using anything that feels irritating. Keep the barrier comfortable first; use any texture‑smoothing cosmetics sparingly."
+  },
+  {
+    "id": "R044",
+    "tags": "skin_type:combination concern:texture routine:pm",
+    "text": "For combination skin with texture concerns, build a gentle evening routine. Use mild, cosmetic skincare products and stop using anything that feels irritating. Keep the barrier comfortable first; use any texture‑smoothing cosmetics sparingly."
+  },
+  {
+    "id": "R045",
+    "tags": "skin_type:combination concern:fine_lines routine:am",
+    "text": "For combination skin with fine_lines concerns, build a gentle morning routine. Use mild, cosmetic skincare products and stop using anything that feels irritating. Layer hydrating serums and moisturizers to reduce the look of fine lines caused by dryness."
+  },
+  {
+    "id": "R046",
+    "tags": "skin_type:combination concern:fine_lines routine:pm",
+    "text": "For combination skin with fine_lines concerns, build a gentle evening routine. Use mild, cosmetic skincare products and stop using anything that feels irritating. Layer hydrating serums and moisturizers to reduce the look of fine lines caused by dryness."
+  },
+  {
+    "id": "R047",
+    "tags": "skin_type:combination concern:sun_protection routine:am",
+    "text": "For combination skin with sun_protection concerns, build a gentle morning routine. Use mild, cosmetic skincare products and stop using anything that feels irritating. Use a comfortable, broad cosmetic sunscreen and reapply according to the label."
+  },
+  {
+    "id": "R048",
+    "tags": "skin_type:combination concern:sun_protection routine:pm",
+    "text": "For combination skin with sun_protection concerns, build a gentle evening routine. Use mild, cosmetic skincare products and stop using anything that feels irritating. Use a comfortable, broad cosmetic sunscreen and reapply according to the label."
+  },
+  {
+    "id": "R049",
+    "tags": "skin_type:sensitive concern:acne routine:am",
+    "text": "For sensitive skin with acne concerns, build a gentle morning routine. Use mild, cosmetic skincare products and stop using anything that feels irritating. Focus on lightweight, non-comedogenic textures and avoid heavy occlusive layers."
+  },
+  {
+    "id": "R050",
+    "tags": "skin_type:sensitive concern:acne routine:pm",
+    "text": "For sensitive skin with acne concerns, build a gentle evening routine. Use mild, cosmetic skincare products and stop using anything that feels irritating. Focus on lightweight, non-comedogenic textures and avoid heavy occlusive layers."
+  },
+  {
+    "id": "R051",
+    "tags": "skin_type:sensitive concern:pigmentation routine:am",
+    "text": "For sensitive skin with pigmentation concerns, build a gentle morning routine. Use mild, cosmetic skincare products and stop using anything that feels irritating. Look for brightening cosmetic ingredients and be consistent rather than using strong products."
+  },
+  {
+    "id": "R052",
+    "tags": "skin_type:sensitive concern:pigmentation routine:pm",
+    "text": "For sensitive skin with pigmentation concerns, build a gentle evening routine. Use mild, cosmetic skincare products and stop using anything that feels irritating. Look for brightening cosmetic ingredients and be consistent rather than using strong products."
+  },
+  {
+    "id": "R053",
+    "tags": "skin_type:sensitive concern:dullness routine:am",
+    "text": "For sensitive skin with dullness concerns, build a gentle morning routine. Use mild, cosmetic skincare products and stop using anything that feels irritating. Add gentle hydrating layers and avoid over-scrubbing the skin surface."
+  },
+  {
+    "id": "R054",
+    "tags": "skin_type:sensitive concern:dullness routine:pm",
+    "text": "For sensitive skin with dullness concerns, build a gentle evening routine. Use mild, cosmetic skincare products and stop using anything that feels irritating. Add gentle hydrating layers and avoid over-scrubbing the skin surface."
+  },
+  {
+    "id": "R055",
+    "tags": "skin_type:sensitive concern:dryness routine:am",
+    "text": "For sensitive skin with dryness concerns, build a gentle morning routine. Use mild, cosmetic skincare products and stop using anything that feels irritating. Use soft, cushioning textures and seal in hydration with a comfortable moisturizer."
+  },
+  {
+    "id": "R056",
+    "tags": "skin_type:sensitive concern:dryness routine:pm",
+    "text": "For sensitive skin with dryness concerns, build a gentle evening routine. Use mild, cosmetic skincare products and stop using anything that feels irritating. Use soft, cushioning textures and seal in hydration with a comfortable moisturizer."
+  },
+  {
+    "id": "R057",
+    "tags": "skin_type:sensitive concern:redness routine:am",
+    "text": "For sensitive skin with redness concerns, build a gentle morning routine. Use mild, cosmetic skincare products and stop using anything that feels irritating. Choose simple, fragrance‑free formulas and keep water temperature lukewarm."
+  },
+  {
+    "id": "R058",
+    "tags": "skin_type:sensitive concern:redness routine:pm",
+    "text": "For sensitive skin with redness concerns, build a gentle evening routine. Use mild, cosmetic skincare products and stop using anything that feels irritating. Choose simple, fragrance‑free formulas and keep water temperature lukewarm."
+  },
+  {
+    "id": "R059",
+    "tags": "skin_type:sensitive concern:texture routine:am",
+    "text": "For sensitive skin with texture concerns, build a gentle morning routine. Use mild, cosmetic skincare products and stop using anything that feels irritating. Keep the barrier comfortable first; use any texture‑smoothing cosmetics sparingly."
+  },
+  {
+    "id": "R060",
+    "tags": "skin_type:sensitive concern:texture routine:pm",
+    "text": "For sensitive skin with texture concerns, build a gentle evening routine. Use mild, cosmetic skincare products and stop using anything that feels irritating. Keep the barrier comfortable first; use any texture‑smoothing cosmetics sparingly."
+  },
+  {
+    "id": "R061",
+    "tags": "skin_type:sensitive concern:fine_lines routine:am",
+    "text": "For sensitive skin with fine_lines concerns, build a gentle morning routine. Use mild, cosmetic skincare products and stop using anything that feels irritating. Layer hydrating serums and moisturizers to reduce the look of fine lines caused by dryness."
+  },
+  {
+    "id": "R062",
+    "tags": "skin_type:sensitive concern:fine_lines routine:pm",
+    "text": "For sensitive skin with fine_lines concerns, build a gentle evening routine. Use mild, cosmetic skincare products and stop using anything that feels irritating. Layer hydrating serums and moisturizers to reduce the look of fine lines caused by dryness."
+  },
+  {
+    "id": "R063",
+    "tags": "skin_type:sensitive concern:sun_protection routine:am",
+    "text": "For sensitive skin with sun_protection concerns, build a gentle morning routine. Use mild, cosmetic skincare products and stop using anything that feels irritating. Use a comfortable, broad cosmetic sunscreen and reapply according to the label."
+  },
+  {
+    "id": "R064",
+    "tags": "skin_type:sensitive concern:sun_protection routine:pm",
+    "text": "For sensitive skin with sun_protection concerns, build a gentle evening routine. Use mild, cosmetic skincare products and stop using anything that feels irritating. Use a comfortable, broad cosmetic sunscreen and reapply according to the label."
+  },
+  {
+    "id": "R065",
+    "tags": "skin_type:normal concern:acne routine:am",
+    "text": "For normal skin with acne concerns, build a gentle morning routine. Use mild, cosmetic skincare products and stop using anything that feels irritating. Focus on lightweight, non-comedogenic textures and avoid heavy occlusive layers."
+  },
+  {
+    "id": "R066",
+    "tags": "skin_type:normal concern:acne routine:pm",
+    "text": "For normal skin with acne concerns, build a gentle evening routine. Use mild, cosmetic skincare products and stop using anything that feels irritating. Focus on lightweight, non-comedogenic textures and avoid heavy occlusive layers."
+  },
+  {
+    "id": "R067",
+    "tags": "skin_type:normal concern:pigmentation routine:am",
+    "text": "For normal skin with pigmentation concerns, build a gentle morning routine. Use mild, cosmetic skincare products and stop using anything that feels irritating. Look for brightening cosmetic ingredients and be consistent rather than using strong products."
+  },
+  {
+    "id": "R068",
+    "tags": "skin_type:normal concern:pigmentation routine:pm",
+    "text": "For normal skin with pigmentation concerns, build a gentle evening routine. Use mild, cosmetic skincare products and stop using anything that feels irritating. Look for brightening cosmetic ingredients and be consistent rather than using strong products."
+  },
+  {
+    "id": "R069",
+    "tags": "skin_type:normal concern:dullness routine:am",
+    "text": "For normal skin with dullness concerns, build a gentle morning routine. Use mild, cosmetic skincare products and stop using anything that feels irritating. Add gentle hydrating layers and avoid over-scrubbing the skin surface."
+  },
+  {
+    "id": "R070",
+    "tags": "skin_type:normal concern:dullness routine:pm",
+    "text": "For normal skin with dullness concerns, build a gentle evening routine. Use mild, cosmetic skincare products and stop using anything that feels irritating. Add gentle hydrating layers and avoid over-scrubbing the skin surface."
+  },
+  {
+    "id": "R071",
+    "tags": "skin_type:normal concern:dryness routine:am",
+    "text": "For normal skin with dryness concerns, build a gentle morning routine. Use mild, cosmetic skincare products and stop using anything that feels irritating. Use soft, cushioning textures and seal in hydration with a comfortable moisturizer."
+  },
+  {
+    "id": "R072",
+    "tags": "skin_type:normal concern:dryness routine:pm",
+    "text": "For normal skin with dryness concerns, build a gentle evening routine. Use mild, cosmetic skincare products and stop using anything that feels irritating. Use soft, cushioning textures and seal in hydration with a comfortable moisturizer."
+  },
+  {
+    "id": "R073",
+    "tags": "skin_type:normal concern:redness routine:am",
+    "text": "For normal skin with redness concerns, build a gentle morning routine. Use mild, cosmetic skincare products and stop using anything that feels irritating. Choose simple, fragrance‑free formulas and keep water temperature lukewarm."
+  },
+  {
+    "id": "R074",
+    "tags": "skin_type:normal concern:redness routine:pm",
+    "text": "For normal skin with redness concerns, build a gentle evening routine. Use mild, cosmetic skincare products and stop using anything that feels irritating. Choose simple, fragrance‑free formulas and keep water temperature lukewarm."
+  },
+  {
+    "id": "R075",
+    "tags": "skin_type:normal concern:texture routine:am",
+    "text": "For normal skin with texture concerns, build a gentle morning routine. Use mild, cosmetic skincare products and stop using anything that feels irritating. Keep the barrier comfortable first; use any texture‑smoothing cosmetics sparingly."
+  },
+  {
+    "id": "R076",
+    "tags": "skin_type:normal concern:texture routine:pm",
+    "text": "For normal skin with texture concerns, build a gentle evening routine. Use mild, cosmetic skincare products and stop using anything that feels irritating. Keep the barrier comfortable first; use any texture‑smoothing cosmetics sparingly."
+  },
+  {
+    "id": "R077",
+    "tags": "skin_type:normal concern:fine_lines routine:am",
+    "text": "For normal skin with fine_lines concerns, build a gentle morning routine. Use mild, cosmetic skincare products and stop using anything that feels irritating. Layer hydrating serums and moisturizers to reduce the look of fine lines caused by dryness."
+  },
+  {
+    "id": "R078",
+    "tags": "skin_type:normal concern:fine_lines routine:pm",
+    "text": "For normal skin with fine_lines concerns, build a gentle evening routine. Use mild, cosmetic skincare products and stop using anything that feels irritating. Layer hydrating serums and moisturizers to reduce the look of fine lines caused by dryness."
+  },
+  {
+    "id": "R079",
+    "tags": "skin_type:normal concern:sun_protection routine:am",
+    "text": "For normal skin with sun_protection concerns, build a gentle morning routine. Use mild, cosmetic skincare products and stop using anything that feels irritating. Use a comfortable, broad cosmetic sunscreen and reapply according to the label."
+  },
+  {
+    "id": "R080",
+    "tags": "skin_type:normal concern:sun_protection routine:pm",
+    "text": "For normal skin with sun_protection concerns, build a gentle evening routine. Use mild, cosmetic skincare products and stop using anything that feels irritating. Use a comfortable, broad cosmetic sunscreen and reapply according to the label."
+  },
+  {
+    "id": "R081",
+    "tags": "skin_type:any concern:any routine:am_step_order",
+    "text": "A gentle morning routine can follow this order: cleanse, optional mist, serum, moisturizer, and sunscreen."
+  },
+  {
+    "id": "R082",
+    "tags": "skin_type:any concern:any routine:pm_step_order",
+    "text": "A simple evening routine can follow this order: cleanse, optional hydrating toner or essence, serum, moisturizer."
+  },
+  {
+    "id": "R083",
+    "tags": "skin_type:any concern:any routine:consistency",
+    "text": "Consistency with a comfortable routine usually matters more than frequently swapping products."
+  },
+  {
+    "id": "R084",
+    "tags": "safety:patch_test routine:any",
+    "text": "Before using a new cosmetic product on your face, patch test on a small area of skin and wait at least 24 hours to see how your skin responds."
+  },
+  {
+    "id": "R085",
+    "tags": "safety:introduce_slowly routine:any",
+    "text": "Introduce only one new cosmetic product at a time so you can clearly see how your skin reacts and avoid overwhelming your routine."
+  },
+  {
+    "id": "R086",
+    "tags": "safety:avoid_over_exfoliating routine:any",
+    "text": "Avoid exfoliating too often. If your skin feels tight, itchy, or looks very shiny and sensitive, reduce exfoliating products and focus on simple hydration."
+  },
+  {
+    "id": "R087",
+    "tags": "safety:non_medical routine:any",
+    "text": "These suggestions are cosmetic and educational only, and are not a substitute for professional medical advice, diagnosis, or treatment."
+  }
+]
