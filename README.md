@@ -14,6 +14,25 @@ All suggestions are **cosmetic‑only**, **non‑medical**, and based on a local
 
 ---
 
+### Tech stack summary
+
+| Layer | Technology | Purpose |
+|---|---|---|
+| Frontend / UI | Streamlit | Interactive skincare recommender and analytics dashboard |
+| Vector database | ChromaDB | Persistent storage and similarity search for rule cards |
+| Embeddings | SentenceTransformer (`all-MiniLM-L6-v2`) | Converts rules and queries into vector embeddings |
+| Retrieval | Custom RAG pipeline (`rag/*`) | Builds queries and retrieves top-k relevant rules |
+| Generation | OpenAI-compatible LLM API | Produces markdown skincare routines grounded in retrieved rules |
+| LLM backends | Mock / Ollama / OpenAI | Supports local demo, self-hosted, or hosted model backends |
+| API server | FastAPI | Exposes `/health` and `/v1/chat/completions` endpoints |
+| Database / logging | SQLite | Stores interactions, retrieved rule IDs, responses, and feedback |
+| Analytics / charts | Plotly | Visualizes usage patterns and feedback in the dashboard |
+| Knowledge base | JSON rules (`knowledge_base/rules.json`) | Local cosmetic-only skincare guidance cards |
+| Bootstrap / setup | Python scripts | Generates rules and builds the Chroma index automatically |
+| Containerization | Docker + Docker Compose | Runs the app and API server together in a reproducible setup |
+
+---
+
 ### Architecture overview
 
 ASCII diagram of the main components:
