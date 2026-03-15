@@ -17,6 +17,14 @@ DEFAULT_COLLECTION_NAME = "skincare_rules"
 def load_rules() -> List[Dict]:
     here = os.path.dirname(os.path.abspath(__file__))
     kb_path = os.path.join(here, "..", "knowledge_base", "rules.json")
+
+    if not os.path.exists(kb_path):
+        raise FileNotFoundError(
+            "rules.json was not found at "
+            f"'{os.path.abspath(kb_path)}'. "
+            "Generate it first by running: python knowledge_base/generate_rules.py"
+        )
+
     with open(kb_path, "r", encoding="utf-8") as f:
         data = json.load(f)
     if not isinstance(data, list):
