@@ -1,0 +1,31 @@
+version: "3.9"
+
+services:
+  llm_api:
+    build:
+      context: ./llm_api
+    container_name: skinsense-llm-api
+    env_file:
+      - ./llm_api/.env
+    ports:
+      - "8001:8001"
+
+  app:
+    build:
+      context: .
+    container_name: skinsense-app
+    env_file:
+      - ./.env
+    environment:
+      # Ensure the app points to the llm_api service inside the Docker network
+      - LLM_BASE_URL=http://llm_api:8001
+      - LLM_API_KEY=dummy
+      - LLM_MODEL=skinsense-local
+    depends_on:
+      - llm_api
+    ports:
+      - "8501:8501"
+    volumes:
+      - ./logs:/app/logs
+      - ./chroma_db:/app/chroma_db
+
