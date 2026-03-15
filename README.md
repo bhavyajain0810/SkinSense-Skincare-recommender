@@ -65,6 +65,7 @@ ASCII diagram of the main components:
                 |  concerns, feedback, table) |
                 +-----------------------------+
 ```
+![SkinSense flowchart](assets/skinsense_flowchart.png)
 
 ---
 
