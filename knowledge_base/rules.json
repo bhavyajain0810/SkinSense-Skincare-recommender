@@ -433,5 +433,15 @@
     "id": "R087",
     "tags": "safety:non_medical routine:any",
     "text": "These suggestions are cosmetic and educational only, and are not a substitute for professional medical advice, diagnosis, or treatment."
+  },
+  {
+    "id": "R088",
+    "tags": "skin_type:oily concern:barrier_repair routine:pm",
+    "text": "For oily skin with barrier_repair concerns, build a gentle evening routine. Use mild, cosmetic skincare products and stop using anything that feels irritating. Focus on lightweight hydrating layers, avoid over-exfoliating, and use a comfortable non-greasy moisturizer to support the skin barrier."
+  },
+  {
+    "id": "R089",
+    "tags": "skin_type:oily concern:barrier_repair routine:am",
+    "text": "For oily skin with barrier_repair concerns, build a gentle morning routine. Use mild, cosmetic skincare products and stop using anything that feels irritating. Focus on lightweight hydrating layers, avoid over-exfoliating, and use a comfortable non-greasy moisturizer to support the skin barrier."
   }
 ]
