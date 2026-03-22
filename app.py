@@ -252,6 +252,20 @@ def page_recommender():
                 "the knowledge base and index are built."
             )
             return
+        
+        with st.expander("Retrieved rules details"):
+            details_rows = []
+            for rule in retrieved:
+                meta = rule.get("metadata") or {}
+                distance = rule.get("distance")
+                details_rows.append(
+                    {
+                        "id": rule.get("id", ""),
+                        "tags": meta.get("tags", "") if isinstance(meta, dict) else "",
+                        "distance": round(float(distance), 4) if distance is not None else None,
+                    }
+                )
+            st.table(details_rows)        
 
         rule_ids = [r["id"] for r in retrieved if r.get("id")]
 
