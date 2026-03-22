@@ -337,7 +337,24 @@ def page_dashboard():
 
     result = _prepare_dashboard_data()
     if result is None or result[0] is None:
-        st.info("No interactions logged yet. Generate a few routines to populate the dashboard.")
+        st.info("No interactions have been logged yet.")
+        st.markdown(
+            """
+            ### Next steps
+            To populate the dashboard:
+
+            1. Go to the **Recommender** tab.
+            2. Choose a skin type and at least one concern.
+            3. Click **Generate routine**.
+            4. Return to the **Dashboard** tab to view charts and recent interactions.
+
+            Once a few recommendations are generated, this dashboard will show:
+            - skin type frequency
+            - top concerns
+            - feedback breakdown
+            - recent interaction history
+            """
+        )
         return
 
     _, skin_counts, concerns_df, feedback_df, recent_df = result
