@@ -115,7 +115,26 @@ def page_recommender():
         "This tool suggests gentle, cosmetic-only routines using a local knowledge base. "
         "It does not provide medical advice."
     )
+    with st.expander("About SkinSense / Safety Disclaimer"):
+     st.markdown(
+        """
+        **SkinSense is a cosmetic-only educational demo.**
 
+        - It does **not** diagnose skin conditions or provide medical treatment advice.
+        - It suggests gentle routines based on a local skincare rules knowledge base.
+        - If you have severe irritation, pain, swelling, infection, or worsening symptoms, seek help from a qualified professional.
+
+        **How the recommendation works**
+
+        1. You enter your skin type, concerns, and optional notes.
+        2. SkinSense retrieves the most relevant rule cards from its local knowledge base using RAG (retrieval-augmented generation).
+        3. The app sends those retrieved rules to the language model and asks it to generate a routine grounded only in those rules.
+        4. If the live LLM is unavailable, the app falls back to a safe built-in template.
+
+        The goal is to keep recommendations **gentle, simple, transparent, and non-medical**.
+        """
+    )
+    
     db.init_db()
     collection = _get_chroma_collection()
 
