@@ -19,6 +19,36 @@ def _ensure_dirs() -> None:
     os.makedirs(LOGS_DIR, exist_ok=True)
 
 
+def normalize_concerns(concerns: Any) -> List[str]:
+    """
+    Normalize concerns into a clean list of strings.
+
+    Accepts:
+    - a comma-separated string
+    - a list/tuple/set of values
+    - None
+    """
+    if concerns is None:
+        return []
+
+    if isinstance(concerns, str):
+        parts = concerns.split(",")
+        return [part.strip() for part in parts if part and part.strip()]
+
+    if isinstance(concerns, (list, tuple, set)):
+        normalized: List[str] = []
+        for item in concerns:
+            if item is None:
+                continue
+            value = str(item).strip()
+            if value:
+                normalized.append(value)
+        return normalized
+
+    value = str(concerns).strip()
+    return [value] if value else []
+
+
 @contextmanager
 def _connect() -> Iterable[sqlite3.Connection]:
     _ensure_dirs()
@@ -69,7 +99,11 @@ def insert_interaction(
     """
     init_db()
     ts = datetime.now(timezone.utc).isoformat()
-    attrs_json = json.dumps(attributes, ensure_ascii=False)
+    normalized_attributes = dict(attributes)
+    normalized_attributes["concerns"] = normalize_concerns(
+    normalized_attributes.get("concerns")
+)
+    attrs_json = json.dumps(normalized_attributes, ensure_ascii=False)
     rules_str = ",".join(retrieved_rule_ids)
 
     with _connect() as conn:
