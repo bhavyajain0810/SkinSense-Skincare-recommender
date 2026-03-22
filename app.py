@@ -371,7 +371,7 @@ def page_dashboard():
             - skin type frequency
             - top concerns
             - feedback breakdown
-            - recent interaction history
+            - recent interaction history (last 25)
             """
         )
         return
@@ -418,9 +418,44 @@ def page_dashboard():
     else:
         st.write("No feedback recorded yet.")
 
-    st.markdown("#### Recent interactions (last 25)")
+        st.markdown("#### Recent interactions (last 25)")
     if recent_df is not None and not recent_df.empty:
-        st.dataframe(recent_df, use_container_width=True)
+        filter_col1, filter_col2 = st.columns(2)
+
+        skin_type_options = ["All"] + sorted(
+            [str(x) for x in recent_df["skin_type"].dropna().unique().tolist()]
+        )
+        feedback_options = ["All"] + sorted(
+            [str(x) for x in recent_df["feedback"].dropna().unique().tolist()]
+        )
+
+        with filter_col1:
+            selected_skin_type = st.selectbox(
+                "Filter by skin type",
+                options=skin_type_options,
+                key="dashboard_skin_type_filter",
+            )
+
+        with filter_col2:
+            selected_feedback = st.selectbox(
+                "Filter by feedback",
+                options=feedback_options,
+                key="dashboard_feedback_filter",
+            )
+
+        filtered_recent_df = recent_df.copy()
+
+        if selected_skin_type != "All":
+            filtered_recent_df = filtered_recent_df[
+                filtered_recent_df["skin_type"] == selected_skin_type
+            ]
+
+        if selected_feedback != "All":
+            filtered_recent_df = filtered_recent_df[
+                filtered_recent_df["feedback"] == selected_feedback
+            ]
+
+        st.dataframe(filtered_recent_df, use_container_width=True)
     else:
         st.write("No recent interactions yet.")
 
