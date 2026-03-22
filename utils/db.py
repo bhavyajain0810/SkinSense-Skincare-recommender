@@ -48,6 +48,12 @@ def init_db() -> None:
             )
             """
         )
+        cur.execute(
+            "CREATE INDEX IF NOT EXISTS idx_interactions_ts ON interactions (ts)"
+        )
+        cur.execute(
+            "CREATE INDEX IF NOT EXISTS idx_interactions_feedback ON interactions (feedback)"
+        )
         conn.commit()
 
 
