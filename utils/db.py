@@ -264,6 +264,17 @@ def get_aggregate_stats() -> Dict[str, Dict[str, int]]:
         "feedback": feedback_counts,
     }
 
+def vacuum_db() -> None:
+    """
+    Run SQLite VACUUM to reclaim unused space and compact the database file.
+
+    Use this as an optional maintenance step after many deletes/updates or
+    other bulk changes. It is not required for normal app usage.
+    """
+    init_db()
+    with _connect() as conn:
+        conn.execute("VACUUM")
+
 def get_db_path() -> str:
     """Expose the DB path for troubleshooting / display."""
     return DB_PATH
