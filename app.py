@@ -196,6 +196,7 @@ def page_recommender():
             options=skin_options,
             index=default_skin_index,
             key="skin_type_input",
+            help="Choose the skin type that best matches how your skin behaves most of the time.",
         )
     with col2:
         concerns = st.multiselect(
@@ -203,6 +204,7 @@ def page_recommender():
             options=concern_options,
             default=default_concerns,
             key="concerns_input",
+            help="Select up to 3 main cosmetic concerns you want the routine to focus on.",
         )
 
     notes = st.text_area(
@@ -217,6 +219,7 @@ def page_recommender():
         max_value=15,
         value=8,
         step=1,
+        help="Controls how many retrieved rule cards are used to build the recommendation.",
     )
 
     if len(concerns) > 3:
