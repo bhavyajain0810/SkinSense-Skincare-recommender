@@ -61,7 +61,7 @@ def _prepare_dashboard_data():
     skin_counts = df["skin_type"].value_counts().reset_index()
     skin_counts.columns = ["skin_type", "count"]
 
-    # Concerns frequency
+    # Concerns frequency (top 15, sorted descending)
     all_concerns = []
     for c_str in df["concerns"]:
         for c in (c_str or "").split(","):
@@ -72,9 +72,10 @@ def _prepare_dashboard_data():
         concerns_df = (
             pd.Series(all_concerns)
             .value_counts()
+            .head(15)
             .reset_index()
-            .rename(columns={"index": "concern", 0: "count"})
         )
+        concerns_df.columns = ["concern", "count"]
     else:
         concerns_df = pd.DataFrame(columns=["concern", "count"])
 
