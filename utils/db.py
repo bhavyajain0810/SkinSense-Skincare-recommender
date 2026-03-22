@@ -54,6 +54,13 @@ def _connect() -> Iterable[sqlite3.Connection]:
     _ensure_dirs()
     conn = sqlite3.connect(DB_PATH, check_same_thread=False)
     try:
+        conn = sqlite3.connect(DB_PATH, check_same_thread=False)
+    except sqlite3.Error as exc:
+        raise RuntimeError(
+            f"Failed to open SQLite database at '{DB_PATH}': {exc}"
+        ) from exc
+
+    try:
         yield conn
     finally:
         conn.close()
