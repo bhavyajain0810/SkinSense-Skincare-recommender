@@ -15,6 +15,40 @@ from typing import Any, Dict, Optional
 
 import requests
 
+ALLOWED_CONCERNS = {
+    "acne",
+    "pigmentation",
+    "dullness",
+    "dryness",
+    "redness",
+    "texture",
+    "fine_lines",
+    "sun_protection",
+}
+
+
+def _normalize_concerns(value: Any) -> list[str]:
+    """
+    Normalize concerns from the vision API into a filtered list of known values.
+    """
+    if isinstance(value, str):
+        raw_items = value.split(",")
+    elif isinstance(value, list):
+        raw_items = value
+    else:
+        return []
+
+    normalized: list[str] = []
+    seen: set[str] = set()
+
+    for item in raw_items:
+        concern = str(item).strip().lower()
+        if not concern or concern not in ALLOWED_CONCERNS or concern in seen:
+            continue
+        normalized.append(concern)
+        seen.add(concern)
+
+    return normalized
 
 def detect_from_image(image_bytes: bytes) -> Optional[Dict[str, Any]]:
     url = os.getenv("VISION_ATTR_URL")
@@ -28,18 +62,14 @@ def detect_from_image(image_bytes: bytes) -> Optional[Dict[str, Any]]:
         if resp.status_code != 200:
             return None
         data = resp.json()
-
+        if not isinstance(data, dict):
+            return None
+        
         skin_type = data.get("skin_type")
         concerns = data.get("concerns")
         notes = data.get("notes")
-
-        # Normalize concerns to a list of strings
-        if isinstance(concerns, str):
-            concerns_list = [c.strip() for c in concerns.split(",") if c.strip()]
-        elif isinstance(concerns, list):
-            concerns_list = [str(c).strip() for c in concerns if str(c).strip()]
-        else:
-            concerns_list = []
+        
+        concerns_list = _normalize_concerns(concerns)
 
         result: Dict[str, Any] = {}
         if skin_type:
