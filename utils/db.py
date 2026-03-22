@@ -208,6 +208,54 @@ def fetch_recent_interactions(limit: int = 25) -> List[Dict[str, Any]]:
         )
     return results
 
+def get_aggregate_stats() -> Dict[str, Dict[str, int]]:
+    """
+    Compute aggregate dashboard stats for skin types, concerns, and feedback.
+
+    Returns:
+        {
+            "skin_types": {"oily": 3, "dry": 2, ...},
+            "concerns": {"acne": 4, "redness": 1, ...},
+            "feedback": {"helpful": 5, "not_helpful": 2, "none": 3},
+        }
+    """
+    interactions = fetch_all_interactions()
+
+    skin_type_counts: Dict[str, int] = {}
+    concern_counts: Dict[str, int] = {}
+    feedback_counts: Dict[str, int] = {
+        "helpful": 0,
+        "not_helpful": 0,
+        "none": 0,
+    }
+
+    for item in interactions:
+        attrs = item.get("attributes") or {}
+
+        skin_type = str(attrs.get("skin_type") or "").strip()
+        if skin_type:
+            skin_type_counts[skin_type] = skin_type_counts.get(skin_type, 0) + 1
+
+        concerns = attrs.get("concerns") or []
+        if isinstance(concerns, str):
+            concerns = [c.strip() for c in concerns.split(",") if c.strip()]
+
+        for concern in concerns:
+            concern_str = str(concern).strip()
+            if concern_str:
+                concern_counts[concern_str] = concern_counts.get(concern_str, 0) + 1
+
+        feedback = item.get("feedback")
+        if feedback in {"helpful", "not_helpful"}:
+            feedback_counts[feedback] += 1
+        else:
+            feedback_counts["none"] += 1
+
+    return {
+        "skin_types": skin_type_counts,
+        "concerns": concern_counts,
+        "feedback": feedback_counts,
+    }
 
 def get_db_path() -> str:
     """Expose the DB path for troubleshooting / display."""
