@@ -1,3 +1,4 @@
+import json
 import pandas as pd
 import plotly.express as px
 import streamlit as st
@@ -295,12 +296,26 @@ def page_recommender():
                 retrieved_rule_ids=rule_ids,
                 response_md=response_md,
             )
-            st.session_state["last_interaction_id"] = interaction_id
-            st.session_state["last_rule_ids"] = rule_ids
         except Exception as exc:
-            st.warning(
-                f"Could not log this interaction to SQLite, but you can still see the recommendation. Details: {exc}"
-            )
+            st.error(f"Could not save interaction to SQLite: {exc}")
+            interaction_id = None
+
+        export_payload = {
+                  "interaction_id": interaction_id,
+                  "attributes": attrs,
+                  "retrieved_rule_ids": rule_ids,
+                  "response_md": response_md,
+            }
+
+        st.download_button(
+            label="Export last interaction (JSON)",
+            data=json.dumps(export_payload, indent=2, ensure_ascii=False),
+            file_name="skinsense_last_interaction.json",
+            mime="application/json",
+        )
+      
+        st.session_state["last_interaction_id"] = interaction_id
+        st.session_state["last_rule_ids"] = rule_ids
 
         st.markdown(response_md)
         st.caption(
