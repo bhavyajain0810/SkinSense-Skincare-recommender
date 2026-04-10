@@ -1,12 +1,9 @@
 """
 Client for calling an OpenAI-compatible chat completions endpoint.
 """
-
 import os
 from typing import List
-
-import requests
-
+from openai import OpenAI
 
 SYSTEM_MESSAGE = (
     "You are SkinSense, a friendly skincare routine assistant. "
@@ -15,66 +12,43 @@ SYSTEM_MESSAGE = (
 )
 
 
-class LLMConfigurationError(RuntimeError):
-    """Raised when the LLM endpoint is not configured."""
-
-
-def _get_env(var: str, default: str | None = None) -> str | None:
-    return os.getenv(var, default)
+class LLMConfigurationError(Exception):
+    pass
 
 
 def call_llm(prompt: str) -> str:
     """
-    Call the OpenAI-compatible endpoint and return the assistant content.
-
-    Raises LLMConfigurationError if configuration is missing and RuntimeError
-    if the call itself fails.
+    Call the Groq API (OpenAI-compatible) and return the generated skincare routine.
     """
-    base_url = _get_env("LLM_BASE_URL")
-    api_key = _get_env("LLM_API_KEY")
-    model = _get_env("LLM_MODEL", "skinsense-local")
+    api_key = os.getenv("LLM_API_KEY")
+    model = os.getenv("LLM_MODEL", "llama-3.3-70b-versatile")
 
-    if not base_url or not api_key or not model:
+    if not api_key:
         raise LLMConfigurationError(
-            "LLM endpoint is not fully configured. "
-            "Set LLM_BASE_URL, LLM_API_KEY, and LLM_MODEL."
+            "Missing LLM_API_KEY. Please set it in your .env file."
         )
-
-    url = base_url.rstrip("/") + "/v1/chat/completions"
-    payload = {
-        "model": model,
-        "temperature": 0.4,
-        "messages": [
-            {"role": "system", "content": SYSTEM_MESSAGE},
-            {"role": "user", "content": prompt},
-        ],
-    }
-    headers = {
-        "Authorization": f"Bearer {api_key}",
-        "Content-Type": "application/json",
-    }
 
     try:
-        resp = requests.post(url, json=payload, headers=headers, timeout=60)
-    except Exception as exc:  # pragma: no cover - network defensive
-        raise RuntimeError(f"Failed to reach LLM endpoint at {url}: {exc}") from exc
-
-    if resp.status_code != 200:
-        raise RuntimeError(
-            f"LLM endpoint error {resp.status_code}: {resp.text[:500]}"
+        client = OpenAI(
+            api_key=api_key,
+            base_url="https://api.groq.com/openai/v1",
         )
-
-    data = resp.json()
-    choices = data.get("choices") or []
-    if not choices:
-        raise RuntimeError("LLM response missing 'choices'")
-
-    message = choices[0].get("message") or {}
-    content = message.get("content")
-    if not isinstance(content, str):
-        raise RuntimeError("LLM response missing message content")
-
-    return content
+        response = client.chat.completions.create(
+            model=model,
+            temperature=0.4,
+            messages=[
+                {"role": "system", "content": SYSTEM_MESSAGE},
+                {"role": "user", "content": prompt},
+            ],
+        )
+        content = response.choices[0].message.content
+        if not content:
+            raise RuntimeError("Empty response from LLM")
+        return content
+    except LLMConfigurationError:
+        raise
+    except Exception as exc:
+        raise RuntimeError(f"LLM API call failed: {exc}") from exc
 
 
 def fallback_answer(rule_ids: List[str]) -> str:
@@ -82,33 +56,33 @@ def fallback_answer(rule_ids: List[str]) -> str:
     Provide a deterministic, local-only markdown response if the LLM is not available.
     """
     rule_list = ", ".join(rule_ids) if rule_ids else "N/A"
-
     md = f"""
-_A local fallback template is being used because the live LLM endpoint is not available._
+_⚠️ A local fallback template is being used because the live LLM endpoint is not available._
 
 **Retrieved rule IDs:** {rule_list}
 
-## AM Routine
+## 🌅 AM (Morning) Routine
 - Rinse face with lukewarm water and a gentle, non-stripping cleanser.
-- Pat skin dry and apply a light hydrating layer such as a toner, essence, or serum.
+- Pat skin dry and apply a hydrating serum.
 - Follow with a comfortable moisturizer that feels good on your skin.
-- Finish with a broad cosmetic sunscreen according to the label instructions.
+- Finish with a broad SPF 30+ sunscreen according to the label instructions.
 
-## PM Routine
+## 🌙 PM (Night) Routine
 - Gently cleanse to remove sunscreen, makeup, and daily buildup.
 - Apply a hydrating serum or essence, focusing on areas that feel dry or tight.
 - Seal in hydration with a moisturizer that does not feel heavy or irritating.
 
-## Extra Tips
+## 💡 Extra Tips
 - Keep your routine simple and consistent instead of frequently changing products.
 - If a product stings, burns, or makes your skin very uncomfortable, stop using it and return to a very basic routine.
-- Introduce only one new cosmetic product at a time so you can clearly see how your skin responds.
+- Introduce only one product at a time so you can clearly see how your skin responds.
 
 ## Why these suggestions?
-This routine focuses on gentle cleansing, comfortable hydration, and everyday cosmetic sun protection. It stays away from strong or complicated product combinations so it can fit many skin types and concerns while you learn what your skin enjoys.
+This routine focuses on gentle cleansing, comfortable hydration, and everyday sun protection.
+It stays away from strong or complicated product combinations so it can fit many skin types
+and concerns while you learn what your skin enjoys.
 
 ## Citations
 Used rules: {rule_list}
 """
     return md.strip()
-

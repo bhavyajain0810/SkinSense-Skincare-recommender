@@ -1,0 +1,37 @@
+/* Background */
+body {
+    background: linear-gradient(135deg, #fdfbfb, #ebedee);
+}
+
+/* Main container */
+.block-container {
+    padding-top: 2rem;
+}
+
+/* Title */
+h1 {
+    color: #ff4b6e;
+    font-weight: 700;
+}
+
+/* Buttons */
+.stButton > button {
+    background-color: #ff4b6e;
+    color: white;
+    border-radius: 10px;
+    padding: 0.5rem 1rem;
+    border: none;
+}
+
+.stButton > button:hover {
+    background-color: #ff2e56;
+}
+
+/* Cards */
+.card {
+    background-color: white;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0px 4px 20px rgba(0,0,0,0.05);
+    margin-bottom: 20px;
+}
