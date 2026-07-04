@@ -5,8 +5,12 @@ services:
     build:
       context: ./llm_api
     container_name: skinsense-llm-api
-    env_file:
-      - ./llm_api/.env
+    environment:
+      - LLM_BACKEND=${LLM_BACKEND:-mock}
+      - OLLAMA_BASE_URL=${OLLAMA_BASE_URL:-http://host.docker.internal:11434}
+      - OLLAMA_MODEL=${OLLAMA_MODEL:-llama3.1}
+      - OPENAI_BASE_URL=${OPENAI_BASE_URL:-https://api.openai.com}
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
     ports:
       - "8001:8001"
 
@@ -14,13 +18,12 @@ services:
     build:
       context: .
     container_name: skinsense-app
-    env_file:
-      - ./.env
     environment:
       # Ensure the app points to the llm_api service inside the Docker network
       - LLM_BASE_URL=http://llm_api:8001
       - LLM_API_KEY=dummy
       - LLM_MODEL=skinsense-local
+      - LLM_TIMEOUT_SECONDS=20
     depends_on:
       - llm_api
     ports:

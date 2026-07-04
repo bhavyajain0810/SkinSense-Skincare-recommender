@@ -109,7 +109,7 @@ def _safety_rules() -> List[Dict]:
 
 
 def generate_rules() -> List[Dict]:
-    """Generate a list of ~120 synthetic skincare rules."""
+    """Generate the deterministic cosmetic skincare rule set."""
     rules: List[Dict] = []
 
     # Systematically create rules across skin types, concerns, and routines.
@@ -139,6 +139,32 @@ def generate_rules() -> List[Dict]:
 
     # Safety and meta rules
     rules.extend(_safety_rules())
+
+    # Preserve the barrier-repair guidance present in the checked-in knowledge base.
+    rules.extend(
+        [
+            {
+                "tags": "skin_type:oily concern:barrier_repair routine:pm",
+                "text": (
+                    "For oily skin with barrier_repair concerns, build a gentle evening "
+                    "routine. Use mild, cosmetic skincare products and stop using anything "
+                    "that feels irritating. Focus on lightweight hydrating layers, avoid "
+                    "over-exfoliating, and use a comfortable non-greasy moisturizer to "
+                    "support the skin barrier."
+                ),
+            },
+            {
+                "tags": "skin_type:oily concern:barrier_repair routine:am",
+                "text": (
+                    "For oily skin with barrier_repair concerns, build a gentle morning "
+                    "routine. Use mild, cosmetic skincare products and stop using anything "
+                    "that feels irritating. Focus on lightweight hydrating layers, avoid "
+                    "over-exfoliating, and use a comfortable non-greasy moisturizer to "
+                    "support the skin barrier."
+                ),
+            },
+        ]
+    )
 
     # Attach stable IDs
     with_ids: List[Dict] = []

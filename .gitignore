@@ -15,6 +15,11 @@ llm_api/.env
 
 # Databases and vector stores
 logs/*.db
+logs/*.sqlite
+logs/*.sqlite3
+*.db
+*.sqlite
+*.sqlite3
 chroma_db/
 
 # IDE and OS
@@ -27,7 +32,15 @@ chroma_db/
 # Python packaging
 *.egg-info/
 .pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+coverage.xml
+htmlcov/
 
 # Docker
 *.log
+
+# Local caches
+.cache/
 

@@ -1,12 +1,13 @@
 import os
 import re
 import time
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Literal, Optional
+from urllib.parse import urlparse
 
 import requests
 from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ValidationError
 
 
 load_dotenv()  # Load llm_api/.env when running locally; Docker uses env_file.
@@ -19,14 +20,14 @@ def get_backend() -> str:
 
 
 class ChatMessage(BaseModel):
-    role: str
-    content: str
+    role: Literal["system", "user", "assistant"]
+    content: str = Field(min_length=1)
 
 
 class ChatCompletionRequest(BaseModel):
-    model: str
-    messages: List[ChatMessage]
-    temperature: Optional[float] = Field(default=0.4)
+    model: str = Field(min_length=1)
+    messages: List[ChatMessage] = Field(min_length=1)
+    temperature: Optional[float] = Field(default=0.4, ge=0, le=2)
 
 
 class ChatCompletionChoiceMessage(BaseModel):
@@ -69,6 +70,17 @@ def _extract_rule_ids(prompt: str) -> List[str]:
     Best-effort extraction of rule IDs like R001 from the prompt.
     """
     return sorted(set(re.findall(r"R\d{3}", prompt)))
+
+
+def _validated_base_url(value: str, variable_name: str) -> str:
+    base_url = value.strip().rstrip("/")
+    parsed = urlparse(base_url)
+    if parsed.scheme not in {"http", "https"} or not parsed.netloc:
+        raise HTTPException(
+            status_code=500,
+            detail=f"{variable_name} must be a valid http:// or https:// URL.",
+        )
+    return base_url
 
 
 def _mock_completion(req: ChatCompletionRequest) -> ChatCompletionResponse:
@@ -124,19 +136,22 @@ Used: {rule_str}
 
 
 def _ollama_completion(req: ChatCompletionRequest) -> ChatCompletionResponse:
-    base_url = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
+    base_url = _validated_base_url(
+        os.getenv("OLLAMA_BASE_URL", "http://localhost:11434"),
+        "OLLAMA_BASE_URL",
+    )
     model = os.getenv("OLLAMA_MODEL", req.model)
 
     # Ollama expects messages in a similar format, but we call its /api/chat.
     payload = {
         "model": model,
-        "messages": [m.dict() for m in req.messages],
+        "messages": [m.model_dump() for m in req.messages],
         "stream": False,
     }
 
     try:
         resp = requests.post(
-            base_url.rstrip("/") + "/api/chat",
+            base_url + "/api/chat",
             json=payload,
             timeout=120,
         )
@@ -152,9 +167,20 @@ def _ollama_completion(req: ChatCompletionRequest) -> ChatCompletionResponse:
             detail=f"Ollama backend error: {resp.text[:500]}",
         )
 
-    data = resp.json()
-    msg = data.get("message") or {}
-    content = msg.get("content") or ""
+    try:
+        data = resp.json()
+        msg = data.get("message") or {}
+        content = msg.get("content") or ""
+    except (ValueError, AttributeError) as exc:
+        raise HTTPException(
+            status_code=502,
+            detail="Ollama returned an invalid JSON response.",
+        ) from exc
+    if not isinstance(content, str) or not content.strip():
+        raise HTTPException(
+            status_code=502,
+            detail="Ollama returned an empty completion.",
+        )
 
     return ChatCompletionResponse(
         id=f"chatcmpl-ollama-{int(time.time())}",
@@ -170,7 +196,10 @@ def _ollama_completion(req: ChatCompletionRequest) -> ChatCompletionResponse:
 
 
 def _openai_proxy_completion(req: ChatCompletionRequest) -> ChatCompletionResponse:
-    base_url = os.getenv("OPENAI_BASE_URL", "https://api.openai.com")
+    base_url = _validated_base_url(
+        os.getenv("OPENAI_BASE_URL", "https://api.openai.com"),
+        "OPENAI_BASE_URL",
+    )
     api_key = os.getenv("OPENAI_API_KEY")
     if not api_key:
         raise HTTPException(
@@ -178,8 +207,8 @@ def _openai_proxy_completion(req: ChatCompletionRequest) -> ChatCompletionRespon
             detail="OPENAI_API_KEY is not set for openai backend.",
         )
 
-    url = base_url.rstrip("/") + "/v1/chat/completions"
-    payload = req.dict()
+    url = base_url + "/v1/chat/completions"
+    payload = req.model_dump()
 
     try:
         resp = requests.post(
@@ -201,14 +230,18 @@ def _openai_proxy_completion(req: ChatCompletionRequest) -> ChatCompletionRespon
         )
 
     # We simply return the backend's JSON to keep full compatibility.
-    data = resp.json()
-    # Ensure required fields for our client; if it's already present, FastAPI
-    # will serialize as-is.
-    return data  # type: ignore[return-value]
+    try:
+        data = resp.json()
+        return ChatCompletionResponse.model_validate(data)
+    except (ValueError, ValidationError) as exc:
+        raise HTTPException(
+            status_code=502,
+            detail="OpenAI-compatible backend returned an invalid response.",
+        ) from exc
 
 
 @app.post("/v1/chat/completions", response_model=ChatCompletionResponse)
-def chat_completions(req: ChatCompletionRequest):
+def chat_completions(req: ChatCompletionRequest) -> ChatCompletionResponse:
     """
     OpenAI-compatible chat completions endpoint.
 

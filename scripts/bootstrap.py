@@ -83,6 +83,7 @@ def ensure_rules() -> str:
 def ensure_chroma_index(rules_path: Optional[str] = None) -> None:
     _ensure_project_root_on_path()
     from rag.build_index import DEFAULT_PERSIST_DIR, build_index
+    from rag.retrieve import get_collection
 
     persist_dir = DEFAULT_PERSIST_DIR
     rules_path = rules_path or _rules_path()
@@ -97,15 +98,21 @@ def ensure_chroma_index(rules_path: Optional[str] = None) -> None:
             print("[bootstrap] ChromaDB directory is empty, building index...")
             rebuild = True
         else:
+            try:
+                collection = get_collection(persist_directory=persist_dir)
+                if collection.count() == 0:
+                    print("[bootstrap] ChromaDB collection is empty; rebuilding...")
+                    rebuild = True
+            except Exception:
+                print("[bootstrap] ChromaDB collection is unavailable; rebuilding...")
+                rebuild = True
+
             rules_mtime = _latest_mtime(rules_path)
             index_mtime = _latest_mtime(persist_dir)
-
-            if rules_mtime > index_mtime:
-                print(
-                    "[bootstrap] rules.json is newer than the ChromaDB index; rebuilding..."
-                )
+            if not rebuild and rules_mtime > index_mtime:
+                print("[bootstrap] rules.json is newer than the index; rebuilding...")
                 rebuild = True
-            else:
+            elif not rebuild:
                 print("[bootstrap] ChromaDB directory already populated and up to date.")
 
     if rebuild:

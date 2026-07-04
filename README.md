@@ -1,533 +1,222 @@
-## SkinSense: Skincare Recommender (RAG + LLM + Vector DB)
+# SkinSense — local-first skincare recommendation with RAG
 
-SkinSense is a demo‑ready, end‑to‑end skincare recommender that uses:
+SkinSense is a cosmetic-only skincare recommendation platform that turns a structured skin profile into a grounded morning and evening routine. It combines local semantic retrieval, constrained generation, transparent rule citations, resilient fallbacks, and a private usage dashboard in one end-to-end AI/ML software project.
 
-- **Streamlit UI**
-- **ChromaDB** (persistent vector database)
-- **SentenceTransformer** embeddings (`all-MiniLM-L6-v2`)
-- **RAG retrieval + LLM generation**
-- **SQLite logging + Plotly dashboard**
-- A separate **LLM API server** exposing an **OpenAI‑compatible** `POST /v1/chat/completions` endpoint
-- **Docker + Docker Compose** to run the Streamlit app and LLM API together
+> SkinSense is educational and cosmetic only. It does not provide diagnosis, treatment, or medical advice.
 
-All suggestions are **cosmetic‑only**, **non‑medical**, and based on a local rules knowledge base. The project is designed to be easy to understand and run for students.
+## Why this project matters
 
----
+Recommendation systems are most useful when users can understand where an answer came from and the product remains usable when an AI service fails. SkinSense demonstrates both: every routine starts with retrieved rule cards, exposes their IDs and distances, and can fall back to a deterministic local response.
 
-### Tech stack summary
+The project also treats product quality as part of ML engineering. Inputs are validated, response contracts are tested, errors degrade cleanly, interactions are logged locally, and retrieval quality can be checked with fixed queries.
 
-| Layer | Technology | Purpose |
-|---|---|---|
-| Frontend / UI | Streamlit | Interactive skincare recommender and analytics dashboard |
-| Vector database | ChromaDB | Persistent storage and similarity search for rule cards |
-| Embeddings | SentenceTransformer (`all-MiniLM-L6-v2`) | Converts rules and queries into vector embeddings |
-| Retrieval | Custom RAG pipeline (`rag/*`) | Builds queries and retrieves top-k relevant rules |
-| Generation | OpenAI-compatible LLM API | Produces markdown skincare routines grounded in retrieved rules |
-| LLM backends | Mock / Ollama / OpenAI | Supports local demo, self-hosted, or hosted model backends |
-| API server | FastAPI | Exposes `/health` and `/v1/chat/completions` endpoints |
-| Database / logging | SQLite | Stores interactions, retrieved rule IDs, responses, and feedback |
-| Analytics / charts | Plotly | Visualizes usage patterns and feedback in the dashboard |
-| Knowledge base | JSON rules (`knowledge_base/rules.json`) | Local cosmetic-only skincare guidance cards |
-| Bootstrap / setup | Python scripts | Generates rules and builds the Chroma index automatically |
-| Containerization | Docker + Docker Compose | Runs the app and API server together in a reproducible setup |
+## What I built
 
----
+- A polished Streamlit routine builder and matching Plotly analytics dashboard.
+- A deterministic 89-card cosmetic skincare knowledge base with stable rule IDs.
+- SentenceTransformer embeddings and persistent ChromaDB top-k retrieval.
+- A safety-constrained prompt with rule-ID citation requirements.
+- A configurable OpenAI-compatible client and FastAPI API.
+- Mock, Ollama, and OpenAI-compatible proxy backends.
+- A deterministic fallback when the language service is unavailable or malformed.
+- SQLite interaction logging and Helpful / Not helpful feedback.
+- Local-only pytest coverage, GitHub Actions CI, Docker, and Docker Compose.
+- A fixed-query RAG evaluation script that prints retrieval evidence.
 
-### Architecture overview
+## Key engineering highlights
 
-ASCII diagram of the main components:
+- **Grounded responses:** the prompt treats retrieved cards as its only knowledge source.
+- **Traceability:** recommendations expose `Rxxx` citations and retrieved distances.
+- **Resilience:** missing indexes, invalid top-k values, unavailable endpoints, malformed JSON/Markdown, and database errors have explicit behavior.
+- **Local-first defaults:** the FastAPI mock backend requires no API key or paid service.
+- **Test isolation:** embedding, vector-store, and HTTP dependencies are mocked in unit tests; SQLite tests use temporary files.
+- **Product-quality UI:** calm pastel styling, responsive cards, concise copy, accessible native controls, and subtle source disclosure.
+
+## Architecture
+
+```mermaid
+flowchart LR
+    A["Streamlit profile"] --> B["Validate + build query"]
+    B --> C["SentenceTransformer"]
+    C --> D["ChromaDB top-k rules"]
+    D --> E["Safety-constrained prompt"]
+    E --> F["FastAPI /v1/chat/completions"]
+    F --> G["Mock / Ollama / OpenAI-compatible backend"]
+    F -. failure .-> H["Deterministic fallback"]
+    G --> I["Routine cards + citations"]
+    H --> I
+    I --> J["SQLite log + feedback"]
+    J --> K["Plotly insights"]
+```
+
+See [docs/architecture.md](docs/architecture.md) for component contracts and failure behavior.
+
+## Project structure
 
 ```text
-                +-----------------------------+
-                |  Streamlit App (app.py)     |
-                |  - Recommender tab          |
-                |  - Dashboard tab            |
-                +---------------+-------------+
-                                |
-                                | (1) user inputs + optional image
-                                v
-                 +--------------+--------------+
-                 |  RAG Layer (rag/*)          |
-                 |  - query builder            |
-                 |  - ChromaDB retrieval       |
-                 +--------------+--------------+
-                                |
-                                | (2) top‑k rule cards
-                                v
-                 +--------------+--------------+
-                 | Prompt builder (utils/*)    |
-                 | - build_prompt(...)         |
-                 +--------------+--------------+
-                                |
-                                | (3) OpenAI‑compatible request
-                                v
-                 +--------------+--------------+
-                 |  LLM API Server (llm_api)   |
-                 |  /v1/chat/completions       |
-                 |   - mock backend (default)  |
-                 |   - ollama backend          |
-                 |   - openai backend          |
-                 +--------------+--------------+
-                                |
-                                | (4) markdown answer + citations
-                                v
-                +---------------+--------------+
-                |  Streamlit App               |
-                |  - Show routine + rule IDs   |
-                |  - Save to SQLite logs       |
-                +---------------+--------------+
-                                |
-                                | (5) Plotly charts from logs
-                                v
-                +-----------------------------+
-                |  Dashboard (skin types,     |
-                |  concerns, feedback, table) |
-                +-----------------------------+
-```
-![SkinSense flowchart](assets/skinsense_flowchart.png)
-
----
-
-### Project structure
-
-```text
-skinsense-rag-skincare-recommender/
-  app.py
-  requirements.txt
-  README.md
-  .gitignore
-  .env.example
-  .dockerignore
-  Dockerfile
-  docker-compose.yml
-  scripts/
-    bootstrap.py
-  knowledge_base/
-    __init__.py
-    generate_rules.py
-    rules.json
-  rag/
-    __init__.py
-    build_index.py
-    retrieve.py
-  utils/
-    __init__.py
-    db.py
-    llm_client.py
-    prompt_templates.py
-    vision_attributes.py
-  llm_api/
-    main.py
-    requirements.txt
-    .env.example
-    Dockerfile
-  logs/
-    .keep
+app.py                       Streamlit product and dashboard
+assets/styles.css            Pastel visual system
+knowledge_base/              Rule generator and checked-in rules
+rag/                         Chroma index builder and retrieval
+utils/                       Validation, prompts, LLM client, DB, vision
+llm_api/main.py              OpenAI-compatible FastAPI service
+scripts/bootstrap.py         Knowledge/index readiness bootstrap
+scripts/evaluate_rag.py      Fixed-query retrieval quality check
+tests/                       Local-only pytest suite
+docs/                        Architecture, UI, and sample evidence
+.github/workflows/ci.yml     Python 3.11 CI
 ```
 
----
+## RAG pipeline
 
-### Knowledge base & RAG
+1. Validate skin type, concerns, notes, and retrieval count.
+2. Convert the structured profile into a concise natural-language query.
+3. Embed it with `all-MiniLM-L6-v2`.
+4. Retrieve top-k rules from the persistent `skincare_rules` Chroma collection.
+5. Build a prompt that delimits user notes, prohibits diagnosis/treatment, and requires citations.
+6. Send the prompt to the local OpenAI-compatible API.
+7. Validate response sections and rule citations; use the fallback on failure.
+8. Render the routine and source cards, then log the interaction locally.
 
-- `knowledge_base/generate_rules.py` creates **~120 short rule cards** into `rules.json`.
-- Each card looks like:
+## Local setup
 
-```json
-{"id": "R001", "tags": "skin_type:oily concern:acne routine:am", "text": "..."}
-```
-
-- The rules cover:
-  - **Skin types**: `oily`, `dry`, `combination`, `sensitive`, `normal`
-  - **Concerns**: `acne`, `pigmentation`, `dullness`, `dryness`, `redness`, `texture`, `fine_lines`, `sun_protection`
-  - General **safety cards**: patch‑test, introduce one new product, avoid over‑exfoliating, non‑medical disclaimer.
-
-Vector index:
-
-- `rag/build_index.py`:
-  - Uses `chromadb.PersistentClient` with path `./chroma_db`
-  - Embeddings from `sentence-transformers` (`all-MiniLM-L6-v2`)
-  - Collection name: **`skincare_rules`**
-  - Upserts `id`, `document`, `metadata` for each rule.
-- `rag/retrieve.py`:
-  - `get_collection(...)` loads the persistent Chroma collection.
-  - `retrieve_rules(collection, query, k=8)` returns:
-
-    ```python
-    [
-      {"id": "...", "document": "...", "metadata": {...}, "distance": 0.123},
-      ...
-    ]
-    ```
-
----
-
-### Streamlit app (`app.py`)
-
-- Two tabs: **Recommender** and **Dashboard**.
-
-**Recommender tab**
-
-- Optional **image uploader** (jpg/png).
-  - If `VISION_ATTR_URL` is set, `utils/vision_attributes.detect_from_image` is called.
-  - If the service returns `skin_type`, `concerns`, or `notes`, they are used as **defaults** only (user can still edit).
-- Manual inputs:
-  - `skin_type` select: `oily`, `dry`, `combination`, `sensitive`, `normal`
-  - `concerns` multiselect (up to 3)
-  - `notes` free text
-  - Slider for **k** retrieved cards (5–15, default 8)
-- On **Generate routine**:
-  1. Build a query string from attributes via `make_query(attrs)`.
-  2. Retrieve top‑k rules via `retrieve_rules(...)`.
-  3. Build a RAG prompt via `build_prompt(attrs, retrieved_rules)` with strict instructions:
-     - Use only rule cards
-     - No medical claims
-     - Output Markdown with sections:
-       - `## AM Routine`
-       - `## PM Routine`
-       - `## Extra Tips`
-       - `## Why these suggestions?`
-       - `## Citations` (must include rule IDs).
-  4. Call the LLM via `utils.llm_client.call_llm` (OpenAI‑compatible /v1/chat/completions).
-  5. If the LLM is not configured or fails:
-     - Use `fallback_answer(rule_ids)` for a deterministic local answer.
-  6. Log interaction to SQLite via `utils.db.insert_interaction`.
-  7. Display:
-     - The markdown answer
-     - **Retrieved rule IDs**: e.g. `R012, R044`
-- Feedback buttons:
-  - 👍 `Helpful`
-  - 👎 `Not helpful`
-  - They call `db.update_feedback` and update the interaction’s `feedback` column.
-
-**Dashboard tab**
-
-- Reads all interactions from `logs/interactions.db`.
-- Uses **Plotly** for:
-  - **Skin type frequency** (bar chart)
-  - **Top concerns frequency** (flattened from comma‑separated list)
-  - **Feedback ratio** (helpful vs not_helpful vs none)
-- Shows a **table of the last 25 interactions**:
-  - id, timestamp, skin_type, concerns, retrieved_rule_ids, feedback.
-
----
-
-### SQLite logging (`utils/db.py`)
-
-- Database file: `logs/interactions.db`
-- Table: `interactions`:
-
-```sql
-id INTEGER PRIMARY KEY AUTOINCREMENT,
-ts TEXT NOT NULL,               -- UTC ISO timestamp
-attributes_json TEXT NOT NULL,  -- JSON of skin_type, concerns, notes
-retrieved_rule_ids TEXT NOT NULL, -- comma-separated IDs
-response_md TEXT NOT NULL,      -- Markdown response
-feedback TEXT NULL              -- 'helpful', 'not_helpful', or NULL
-```
-
-Helpers:
-
-- `init_db()`
-- `insert_interaction(attributes, retrieved_rule_ids, response_md) -> id`
-- `update_feedback(id, feedback)`
-- `fetch_all_interactions()`
-- `fetch_recent_interactions(limit=25)`
-
----
-
-### Prompt engineering (`utils/prompt_templates.py`)
-
-- `make_query(attrs) -> str`:
-  - Converts `{skin_type, concerns, notes}` into a compact search query.
-- `build_prompt(attrs, retrieved_rules) -> str`:
-  - Assembles the full system + user prompt:
-    - Strictly uses provided rule cards as the only source of truth.
-    - Enforces **cosmetic‑only**, non‑medical language.
-    - Enforces Markdown output with sections and **citations**:
-
-      ```markdown
-      ## AM Routine
-      ...
-
-      ## PM Routine
-      ...
-
-      ## Extra Tips
-      ...
-
-      ## Why these suggestions?
-      ...
-
-      ## Citations
-      Used: R001, R044, ...
-      ```
-
----
-
-### LLM client (`utils/llm_client.py`)
-
-- Talks to the LLM API server (or any OpenAI‑compatible endpoint).
-- Reads:
-  - `LLM_BASE_URL` – e.g. `http://localhost:8001` or `http://llm_api:8001` in Docker
-  - `LLM_API_KEY` – dummy is fine for the mock backend
-  - `LLM_MODEL` – logical model name, e.g. `skinsense-local`
-- Sends:
-
-```json
-POST {LLM_BASE_URL}/v1/chat/completions
-Authorization: Bearer {LLM_API_KEY}
-{
-  "model": "skinsense-local",
-  "messages": [
-    {"role": "system", "content": "..."},
-    {"role": "user", "content": "<RAG prompt>"}
-  ],
-  "temperature": 0.4
-}
-```
-
-- Returns the assistant message content.
-- `fallback_answer(rule_ids)` generates a **local, deterministic**, safe markdown routine (used when the LLM is not available).
-
----
-
-### Optional vision attributes (`utils/vision_attributes.py`)
-
-- If `VISION_ATTR_URL` is set:
-  - Sends: `{"image_base64": "..."}`
-  - Expects: `{"skin_type": "...", "concerns": [...], "notes": "..."}`.
-- Normalizes concerns to a list of strings.
-- Returns `None` on any error, so the app remains robust if no service is available.
-
----
-
-### LLM API server (`llm_api/main.py`)
-
-Implements a FastAPI server with:
-
-- `GET /health`:
-  - Returns `{"status": "ok", "backend": "<mock|ollama|openai>"}`.
-- `POST /v1/chat/completions`:
-  - Accepts an **OpenAI‑compatible** body:
-
-    ```json
-    {
-      "model": "skinsense-local",
-      "messages": [
-        {"role": "system", "content": "..."},
-        {"role": "user", "content": "..."}
-      ],
-      "temperature": 0.4
-    }
-    ```
-
-  - Returns an OpenAI‑compatible response with `choices[0].message.content`.
-
-Backends (selected by `LLM_BACKEND` in `llm_api/.env`):
-
-- **`mock` (default)**:
-  - Deterministic skincare routine.
-  - Extracts rule IDs from the prompt using regex (`R\d{3}`) and includes them in `## Citations  Used: Rxxx, Ryyy`.
-- **`ollama`**:
-  - Uses `OLLAMA_BASE_URL` (default `http://localhost:11434`) and `OLLAMA_MODEL`.
-  - Calls `{OLLAMA_BASE_URL}/api/chat` with `{"model": OLLAMA_MODEL, "messages": [...]}`.
-  - Wraps the result into OpenAI‑style response.
-- **`openai`**:
-  - Uses `OPENAI_BASE_URL` (default `https://api.openai.com`) and `OPENAI_API_KEY`.
-  - Proxies the request to `/v1/chat/completions` and returns the raw JSON.
-
----
-
-### Environment variables
-
-**Root `.env.example`** (for Streamlit app):
-
-```env
-LLM_BASE_URL=http://localhost:8001
-LLM_API_KEY=dummy
-LLM_MODEL=skinsense-local
-#VISION_ATTR_URL=http://localhost:9000/analyze
-```
-
-**`llm_api/.env.example`**:
-
-```env
-LLM_BACKEND=mock
-#OLLAMA_BASE_URL=http://host.docker.internal:11434
-#OLLAMA_MODEL=llama3.1
-#OPENAI_BASE_URL=https://api.openai.com
-#OPENAI_API_KEY=sk-...
-```
-
-You should create **real `.env` files** by copying these examples (no secrets are committed).
-
----
-
-### Local setup (no Docker)
-
-Requirements:
-
-- Python 3.10+ recommended
-- `git` (optional but useful)
-
-Steps (Windows PowerShell examples, similar for macOS/Linux):
+Python 3.11 is recommended.
 
 ```powershell
-cd "d:\Skinsense skincare recommmender\skinsense-rag-skincare-recommmender"
-
-# 1. Create and activate a virtual environment
 python -m venv .venv
-.\.venv\Scripts\activate
-
-# 2. Install dependencies for the Streamlit app
-pip install --upgrade pip
-pip install -r requirements.txt
-
-# 3. Install dependencies for the LLM API server
-pip install -r llm_api\requirements.txt
-
-# 4. Create env files (safe, no secrets included)
-copy .env.example .env
-copy llm_api\.env.example llm_api\.env
+.\.venv\Scripts\Activate.ps1
+python -m pip install --upgrade pip
+python -m pip install -r requirements-dev.txt
+Copy-Item .env.example .env
+Copy-Item llm_api\.env.example llm_api\.env
 ```
 
-Now generate the knowledge base and Chroma index, start the LLM API, and start the app:
+Build the local index only when it does not already exist:
 
 ```powershell
-# Terminal 1 – generate rules and build index (optional, bootstrap does this too)
-python knowledge_base\generate_rules.py
-python rag\build_index.py
-
-# Terminal 2 – start the LLM API (port 8001)
-cd "d:\Skinsense skincare recommmender\skinsense-rag-skincare-recommmender"
-uvicorn llm_api.main:app --port 8001 --reload
-
-# Terminal 3 – start Streamlit app (port 8501)
-cd "d:\Skinsense skincare recommmender\skinsense-rag-skincare-recommmender"
-streamlit run app.py
+python scripts\bootstrap.py
 ```
 
-Open your browser at `http://localhost:8501`.
+Start the mock language service:
 
-> The **mock backend** works out‑of‑the‑box with `LLM_BACKEND=mock` and `LLM_API_KEY=dummy`.  
-> No Ollama or OpenAI keys are required to get a working demo.
+```powershell
+$env:LLM_BACKEND="mock"
+python -m uvicorn llm_api.main:app --host 127.0.0.1 --port 8001
+```
 
----
+In another terminal, start Streamlit:
 
-### Running with Docker & Docker Compose
+```powershell
+$env:LLM_BASE_URL="http://127.0.0.1:8001"
+python -m streamlit run app.py
+```
 
-Prerequisites:
+Open `http://localhost:8501`. The mock backend is deterministic and needs no external API key.
 
-- Docker Desktop or Docker Engine + Docker Compose
+## Docker setup
 
-Steps:
+Docker Compose defaults to the local mock backend, so copied environment files are not required for the basic demo:
 
-```bash
-cd skinsense-rag-skincare-recommender
-
-# 1. Prepare env files (optional but recommended)
-cp .env.example .env
-cp llm_api/.env.example llm_api/.env
-
-# 2. Build and run both services
+```powershell
 docker compose up --build
 ```
 
-This does the following:
+Services:
 
-- Builds the **llm_api** image and runs it on port **8001**.
-- Builds the **app** image and runs Streamlit on port **8501**.
-- Mounts:
-  - `./logs` → `/app/logs` (SQLite interactions)
-  - `./chroma_db` → `/app/chroma_db` (Chroma persistent store)
-- The app container runs:
-  - `python scripts/bootstrap.py` (ensures rules + Chroma index)
-  - `streamlit run app.py --server.address=0.0.0.0 --server.port=8501`
+- Streamlit: `http://localhost:8501`
+- FastAPI health: `http://localhost:8001/health`
+- OpenAI-compatible endpoint: `http://localhost:8001/v1/chat/completions`
 
-Visit `http://localhost:8501` in your browser.
+The existing `logs` and `chroma_db` directories are mounted as local volumes.
 
----
+## Testing and CI
 
-### Verification checklist
+Run the complete local-only suite:
 
-You can verify the pipeline end‑to‑end with these commands (from the project root):
+```powershell
+python -m pytest
+```
 
-1. **Generate rules**
+Tests cover:
 
-   ```bash
-   python knowledge_base/generate_rules.py
-   ```
+- Knowledge-base generation and stable IDs.
+- Retrieval shape, top-k behavior, invalid inputs, and missing indexes.
+- Prompt safety wording and citation rules.
+- Fallback and malformed LLM responses.
+- SQLite logging and feedback updates.
+- FastAPI health and OpenAI-compatible completion shape.
 
-2. **Build Chroma index**
+The CI workflow uses Python 3.11, installs `requirements-dev.txt`, and runs pytest. Tests do not call external APIs, require secrets, or download an embedding model.
 
-   ```bash
-   python rag/build_index.py
-   ```
+## RAG quality check
 
-3. **Start LLM API server**
+With an existing local index and embedding model, run:
 
-   ```bash
-   uvicorn llm_api.main:app --port 8001
-   ```
+```powershell
+python scripts\evaluate_rag.py
+```
 
-4. **Start Streamlit app**
+It evaluates oily acne-prone skin, dry sensitive skin, pigmentation, redness, sunscreen, and beginner-routine queries. For each case it prints rule IDs, distances, tags, and whether an expected tag was found. This is a diagnostic check rather than a benchmark; distance values may vary across library/model versions.
 
-   ```bash
-   streamlit run app.py
-   ```
+## Sample inputs and outputs
 
-5. **Run everything via Docker Compose**
+See [docs/sample_inputs_outputs.md](docs/sample_inputs_outputs.md) for representative profiles, output contracts, fallback behavior, and invalid-input behavior.
 
-   ```bash
-   docker compose up --build
-   ```
+Example input:
 
-If all of these complete without errors and you can see routines + dashboards in the browser, the project is working correctly.
+```json
+{
+  "skin_type": "oily",
+  "concerns": ["acne", "texture"],
+  "notes": "I prefer a simple beginner routine."
+}
+```
 
----
+Every successful response contains:
 
-### Safety disclaimer
+```text
+AM Routine
+PM Routine
+Extra Tips
+Why these suggestions?
+Citations: Used: Rxxx, Ryyy
+```
 
-- All outputs in this project are **cosmetic and educational** only.
-- They are **not** medical advice, diagnosis, or treatment.
-- Users should **consult a qualified professional** for any medical or serious skin concerns.
-- Do not use this project for clinical or health‑critical decisions.
+## Configuration
 
----
+Streamlit client:
 
-### Troubleshooting
+| Variable | Default | Purpose |
+|---|---|---|
+| `LLM_BASE_URL` | `http://localhost:8001` | OpenAI-compatible API base |
+| `LLM_API_KEY` | `dummy` | Accepted by local mock service |
+| `LLM_MODEL` | `skinsense-local` | Logical model name |
+| `LLM_TIMEOUT_SECONDS` | `20` | Client HTTP timeout |
+| `VISION_ATTR_URL` | unset | Optional local image-attribute service |
 
-- **`ModuleNotFoundError` for a package**
-  - Make sure your virtual environment is active and you ran:
-    - `pip install -r requirements.txt`
-    - `pip install -r llm_api/requirements.txt`
+FastAPI backend:
 
-- **ChromaDB / embedding errors**
-  - Ensure `knowledge_base/rules.json` exists (run `python knowledge_base/generate_rules.py`).
-  - Rebuild the index: `python rag/build_index.py`.
-  - In Docker, the app runs `scripts/bootstrap.py` automatically.
+| Variable | Default | Purpose |
+|---|---|---|
+| `LLM_BACKEND` | `mock` | `mock`, `ollama`, or `openai` |
+| `OLLAMA_BASE_URL` | `http://localhost:11434` | Optional Ollama service |
+| `OLLAMA_MODEL` | request model | Optional Ollama model |
+| `OPENAI_BASE_URL` | `https://api.openai.com` | Optional compatible upstream |
+| `OPENAI_API_KEY` | unset | Required only for the optional proxy backend |
 
-- **`Could not connect to the vector database` in Streamlit**
-  - Run `python rag/build_index.py` once, or `python scripts/bootstrap.py`.
-  - Check that `./chroma_db` exists and is writable.
+## Safety and limitations
 
-- **LLM endpoint errors in the UI**
-  - If LLM is not configured or fails, the app automatically falls back to a local template.
-  - To debug:
-    - Confirm `LLM_BASE_URL` and `LLM_API_KEY` in `.env`.
-    - Make sure the LLM API server is running (`uvicorn llm_api.main:app --port 8001`).
-    - Check `GET http://localhost:8001/health` for backend info.
+- The knowledge base is synthetic, small, and educational; it is not clinically validated.
+- Retrieval similarity is not a substitute for expert evaluation.
+- The fallback is intentionally generic and does not synthesize each rule into tailored prose.
+- The optional image integration depends on a separately configured service and is not a diagnostic feature.
+- Hosted model behavior can vary; SkinSense validates structure and falls back but cannot guarantee factual quality beyond its rule grounding.
+- First-time SentenceTransformer setup can require downloading the public model. Unit tests never require that download.
 
-- **Docker build takes long or fails**
-  - Large model downloads (sentence‑transformers) may take a while the first time.
-  - Ensure you have a stable internet connection the first time you build/run.
+## Resume-ready project summary
 
-- **Dashboard is empty**
-  - Generate a few routines so interactions are logged to SQLite.
-  - Then refresh the dashboard tab.
+Built a local-first RAG skincare recommendation platform using Streamlit, ChromaDB, SentenceTransformers, FastAPI, and SQLite. Implemented grounded top-k retrieval with rule citations, OpenAI-compatible mock/Ollama/hosted backends, deterministic fallback behavior, input and response validation, analytics and feedback logging, Docker deployment, pytest coverage, CI, and a fixed-query retrieval evaluation harness.
 
-If you run into anything else, you can inspect:
+## License
 
-- `logs/interactions.db` – using any SQLite viewer
-- `docker compose logs` – for container‑level troubleshooting
-
+See [LICENSE](LICENSE).

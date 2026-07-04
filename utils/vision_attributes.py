@@ -15,16 +15,10 @@ from typing import Any, Dict, Optional
 
 import requests
 
-ALLOWED_CONCERNS = {
-    "acne",
-    "pigmentation",
-    "dullness",
-    "dryness",
-    "redness",
-    "texture",
-    "fine_lines",
-    "sun_protection",
-}
+from utils.validation import CONCERNS, SKIN_TYPES
+
+
+ALLOWED_CONCERNS = set(CONCERNS)
 
 
 def _normalize_concerns(value: Any) -> list[str]:
@@ -72,8 +66,9 @@ def detect_from_image(image_bytes: bytes) -> Optional[Dict[str, Any]]:
         concerns_list = _normalize_concerns(concerns)
 
         result: Dict[str, Any] = {}
-        if skin_type:
-            result["skin_type"] = str(skin_type).strip().lower()
+        normalized_skin_type = str(skin_type or "").strip().lower()
+        if normalized_skin_type in SKIN_TYPES:
+            result["skin_type"] = normalized_skin_type
         if concerns_list:
             result["concerns"] = concerns_list
         if isinstance(notes, str) and notes.strip():
