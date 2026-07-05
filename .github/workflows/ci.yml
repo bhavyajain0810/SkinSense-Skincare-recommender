@@ -30,3 +30,6 @@ jobs:
         env:
           LLM_BACKEND: mock
         run: python -m pytest
+
+      - name: Validate Docker Compose
+        run: docker compose -f docker-compose.yml config --quiet
